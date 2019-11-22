@@ -16,10 +16,7 @@ export default class TopList extends Component {
     }
     componentDidMount() {
         let id = this.props.location.state;
-        console.log(id)
-        console.log(this.props)
         this.$http.get(list,{params:{id}}).then(res=>{
-            console.log(res.data.data)
             this.setState({
                 data:{
                     updateTime:res.data.data.updateTime,
@@ -30,6 +27,10 @@ export default class TopList extends Component {
             })
         })
     }
+    //点击歌曲跳转播放页播放
+    play(songid,mid) {
+        this.props.history.push("/play",{songid,mid})
+    }
     render() {
         console.log(this.state.data)
         const songList = this.state.data.songList.map((item, index) => {
@@ -37,15 +38,15 @@ export default class TopList extends Component {
             <li key={index}>
                 <div className="left">
                     <div className="subscript">{index+1}</div>
-                    <div className="songName">
+                    <div className="songName" onClick={()=>{this.play(item.songId,item.songMid)}}>
                         <p>{item.songName}</p>
                         <p>
                         {
-                            item.singer.map((s,i)=>{
-                                return (
-                                    <span key={i}>{s.singerName}</span>
-                                )
-                            })
+                        item.singer.map((s,i)=>{
+                            return (
+                                <span key={i}>{s.singerName}</span>
+                            )
+                        })
                         }
                         </p>
                     </div>

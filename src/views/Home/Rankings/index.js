@@ -19,7 +19,7 @@ export default class Rankings extends Component {
     }
     changeClick(id) {
         this.props.history.push('/toplist',id)
-        console.log(this.props)
+        // console.log(this.props)
     }
     render() {
         return (
