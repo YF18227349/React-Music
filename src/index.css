@@ -1,13 +1,125 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html,
+  body,
+  #root,
+  .container {
+    width: 100%;
+    height: 100%;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .container .main {
+    flex: 1;
+  }
+  /* 顶部导航 */
+  .container .header {
+    width: 100%;
+    height: 40px;
+  }
+  .container .header a {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 18px;
+    color: #000;
+  }
+  .container .header a.active {
+    color: #00e09e;
+    background: #fff;
+    border-bottom: 2px solid #00e09e;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
+  }
+
+
+
+
+  .Recommend {
+    background: #F4F4F4;
+  }
+  /* 走马灯 */
+  .Recommend .slider {
+    height: 160px;
+    width: 100%;
+  }
+  .Recommend .ant-carousel .slick-slide {
+    text-align: center;
+    /* background: #364d79; */
+    overflow: hidden;
+  }
+  .Recommend .ant-carousel .slick-slide img {
+    height: 100%;
+    width: 100%;
+  }
+  /* 热歌 */
+  .Recommend .radio {
+    padding: 10px;
+
+  }
+  .Recommend .radio ul {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+  }
+  .Recommend .radio ul li {
+    width: 49%;
+    height: 50%;
+    background: #FFF;
+  }
+  .Recommend .radio ul li img {
+    width: 100%;
+  }
+  .Recommend .radio ul li h3{
+    padding: 5px;
+    margin: 0;
+  }
+
+
+
+  .rankings {
+    padding: 0 10px;
+    background: #F4F4F4;
+  }
+  .rankings ul li{
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between; 
+  }
+  .rankings ul li .imgs {
+    width: 120px;
+    height: 120px;
+  }
+  .rankings ul li .imgs img {
+    width: 120px;
+    height: 120px;
+  }
+  .rankings ul li .text {
+    flex: 1;
+    padding: 0 10px;
+    background: #FFF;
+    overflow: hidden; 
+  }
+  .rankings ul li .text h3 {
+    font-size: 18px;
+  }
+  .rankings ul li .text p {
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .rankings ul li .text p span {
+    font-size: 14px;
+  }
+  .rankings ul li .text p .songName {
+    font-size: 16px;
+    color: #000;
+    margin: 0 5px;
+  }
