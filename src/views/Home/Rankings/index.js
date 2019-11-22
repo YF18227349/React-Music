@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { top } from "../../../common/API"
+import { Icon } from 'antd';
+
 export default class Rankings extends Component {
     constructor(props) {
         super(props)
@@ -9,12 +11,14 @@ export default class Rankings extends Component {
     }
     componentDidMount() {
         this.$http.get(top).then(res=>{
-            console.log(res.data.data)
-            let data = res.data.data;
+            console.log(res.data.data) 
             this.setState({
-                data
+                data:res.data.data
             })
         })
+    }
+    changeClick(id) {
+        this.props.history.push('/toplist',id)
     }
     render() {
         return (
@@ -23,7 +27,7 @@ export default class Rankings extends Component {
                     {
                         this.state.data.map((item,index)=>{
                             return (
-                                <li key={item.id}>
+                                <li key={item.id} onClick={()=>this.changeClick(item.id)}>
                                     <div className="imgs">
                                         <img src={item.picUrl} alt=""/>
                                     </div>
@@ -39,10 +43,11 @@ export default class Rankings extends Component {
                                                 </p>
                                                 )
                                             })
-                                        }
-                                        {/* <span>></span> */}
+                                        } 
                                     </div>
-                                  
+                                    <div className="icon">
+                                       <Icon type="right" />
+                                    </div>  
                                 </li>
                             )
                         })

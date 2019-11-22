@@ -12,11 +12,9 @@ export default class Rerecommend extends Component {
     componentDidMount() {
         this.$http.get(push).then(res=>{
           console.log(res.data.data)
-          let slider = res.data.data.slider;
-          let radioList = res.data.data.radioList;
           this.setState({
-            slider,
-            radioList
+            slider:res.data.data.slider,
+            radioList:res.data.data.radioList
           })
         })
     }

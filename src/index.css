@@ -16,6 +16,7 @@
   }
   .container .main {
     flex: 1;
+    overflow: auto;
   }
   /* 顶部导航 */
   .container .header {
@@ -88,7 +89,8 @@
     background: #F4F4F4;
   }
   .rankings ul li{
-    padding-top: 10px;
+    margin-top: 10px;
+    background-color: #fff;
     display: flex;
     justify-content: space-between; 
   }
@@ -101,16 +103,25 @@
     height: 120px;
   }
   .rankings ul li .text {
+    width: 200px;
     flex: 1;
     padding: 0 10px;
     background: #FFF;
-    overflow: hidden; 
+    overflow: hidden;
+  }
+
+  .rankings ul li .icon {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    width: 20px;
   }
   .rankings ul li .text h3 {
     font-size: 18px;
   }
   .rankings ul li .text p {
     margin: 0;
+    flex: 1;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -122,4 +133,26 @@
     font-size: 16px;
     color: #000;
     margin: 0 5px;
+  }
+
+
+  /* 搜索 */
+  .container .main .search .input{
+    background: #F4F4F4;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .container .main .search .input .ant-input {
+    padding-left: 30px;
+
+  }
+  .container .main .search .input .cancel{
+    display: flex;
+    align-items: center;
+    width: 40px;
+  }
+  .ant-input-suffix {
+    width: 20px;
+    left: 12px;
   }
