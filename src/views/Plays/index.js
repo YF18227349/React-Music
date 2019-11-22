@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-export default class Search extends Component {
+export default class Plays extends Component {
     render() {
         return (
             <div>
-                搜索
+                
             </div>
         )
     }

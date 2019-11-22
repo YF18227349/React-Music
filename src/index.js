@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from "react-router-dom"
 import './index.css';
 import 'antd/dist/antd.css';
-import App from './views/Home/index';
+import MapRoute from './routes/MapRoute'
+import routes from './routes/route.config'
 import axios from "axios"
 Component.prototype.$http = axios
+
+
 ReactDOM.render((
     <Router>
-        <App />
+        <MapRoute routes={routes}/>
     </Router>
 ), document.getElementById('root'));
 
