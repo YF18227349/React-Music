@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import { Switch, NavLink, Link, Redirect, Route, withRouter} from "react-router-dom"
+import { Switch, NavLink } from "react-router-dom"
 import { Row, Col } from 'antd';
 import MapRoute from "../../routes/MapRoute"
-// import Recommend from "./Recommend"
-// import Rankings from "./Rankings"
-// import Searchs from "./Searchs"
 
 export default class Home extends Component {
   render() {

@@ -8,7 +8,6 @@ import routes from './routes/route.config'
 import axios from "axios"
 Component.prototype.$http = axios
 
-
 ReactDOM.render((
     <Router>
         <MapRoute routes={routes}/>

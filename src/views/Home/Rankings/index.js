@@ -18,8 +18,7 @@ export default class Rankings extends Component {
         })
     }
     changeClick(id) {
-        this.props.history.push('/toplist',id)
-        // console.log(this.props)
+        this.props.history.push({pathname: '/toplist',state: {id}})
     }
     render() {
         return (
@@ -38,9 +37,9 @@ export default class Rankings extends Component {
                                             item.songList.map((item,index)=>{
                                                 return (
                                                 <p key={index}>
-                                                        <span>{item.number}</span>
-                                                        <span className="songName">{item.songName}</span>
-                                                        <span>- {item.singerName}</span>
+                                                    <span>{item.number}</span>
+                                                    <span className="songName">{item.songName}</span>
+                                                    <span>- {item.singerName}</span>
                                                 </p>
                                                 )
                                             })

@@ -160,6 +160,9 @@
 
 
   /* 列表 */
+  .toplist {
+    overflow: hidden;
+  }
   .toplist .info {
     width: 100%;
     height: 220px;
@@ -175,6 +178,12 @@
   }
   .toplist .list-item {
     padding: 0 15px;
+  }
+  .toplist .list-item .pullup {
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    color: #666;
   }
   .toplist .list-item ul li {
     display: flex;
@@ -223,22 +232,69 @@
     display: flex;
     flex-direction: column;
   }
-  .play .lyric {
+  .play .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 50px;
+    height: 50px;
+
+  }
+  .play .title>.down{
+    width: 50px;
+  }
+  .play .title>h3 {
+    width: 100%;
     flex: 1;
+    margin-bottom: 0;
+    font-size: 600;
+    text-align: center;
   }
   .play .control {
     width: 100%;
-    height: 200px;
-    background: #999;
     text-align: center;
   }
   .play .control .control-btn {
-    height: 120px;
+    height: 180px;
+    padding: 20px 25px;
+  }
+  .play .control .control-btn .icont-box{
+    display: flex;
+    justify-content: space-around;
+    height: 80px;
+    align-items: center;
   }
   .play .control .control-btn .icont {
-    font-size: 50px;
+    font-size: 40px;
   }
-  .play .control .ant-btn{
+  .play .control .control-btn .icont-box>div{
+    width: 40px;
+    height: 40px;
+    border: 3px solid #353535;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
   
 
-  }
+
+/* 歌词面板 */
+.lyrics-box{
+  width: 90%;
+  margin: 6% 5% 4%;
+  text-align: center;
+  overflow-y: hidden;
+  flex: 1;
+}
+.lyrics-panels{
+  color: #678e95;
+  line-height: 30px;
+}
+.lyrics-panels .act{
+  color: #00e09e;
+  font-size: 18px;
+  font-weight: 500;
+}

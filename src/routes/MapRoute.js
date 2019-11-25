@@ -4,7 +4,6 @@ import {
     Switch,
     Redirect
 } from 'react-router-dom'
-
 export default class MapRoute extends Component {
     render() {
         return (
