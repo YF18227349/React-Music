@@ -20,12 +20,17 @@ export default class Plays extends Component {
             },
             isPaused:false,
             pValue:0,
+            biaoti:""
         }
     }
     componentWillUnmount(){   
         this.setState = (state)=>{ 
           return;
-        };  
+        }; 
+        clearInterval(this.playtimer)
+        this.playtimer = null; 
+        clearInterval(this.timer)
+        this.timer = null;
     }
     componentDidMount() {
         //mid为歌曲id
@@ -37,6 +42,7 @@ export default class Plays extends Component {
             },() => {
                 // this.refs.musicAudio.play()
                 // this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
+               
             })
         })
         //songid为歌词id
@@ -45,7 +51,9 @@ export default class Plays extends Component {
             let lyric = res.data.data.lyric  
             this.createLrcObj(lyric);
             console.log(lyric)
-        })   
+        })  
+        
+       
     }
   
     createLrcObj(lrc) {
@@ -85,13 +93,11 @@ export default class Plays extends Component {
         oLRC.ms.sort(function (a, b) {//按时间顺序排序
             return a.t-b.t;
         });
+        console.log(oLRC.ti)
         this.setState({
-            oLRC
+            oLRC,
+            biaoti:oLRC.ti
         })
-    }
-    componentWillUnmount() {
-        clearInterval(this.playtimer)
-        this.playtimer = null;
     }
     //音频进度改变触发事件
     timeUpdate(){
@@ -125,6 +131,16 @@ export default class Plays extends Component {
           if(musicAudio.paused) {                 
             musicAudio.play();//播放  
             this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
+
+            this.timer = setInterval(()=>{
+                let first = this.state.biaoti.substring(0,1)
+                let end = this.state.biaoti.substring(1)
+                this.setState({
+                   
+                    biaoti:end + first
+                   
+                })
+            },1000) 
           }else{
             musicAudio.pause();//暂停
             clearInterval(this.playtimer)
@@ -145,13 +161,13 @@ export default class Plays extends Component {
            )
         })
         return (
-            <div className="play">
+            <div className="container play">
                 <div className="title">
                    <Icon className="down" type="down" />
-                   <h3>{oLRC.ti}</h3>
+                   <h3>{this.state.biaoti}</h3>
                 </div>
                 <div className="lyrics-box">
-                   <div className="lyrics-panels" ref="ul" style={{top:- currentId * 35 + 150 +  'px'}}>
+                   <div className="lyrics-panels" ref="ul" style={{top:- currentId * 35 + 200 +  'px'}}>
                     {lyrics}
                    </div>
                 </div>
