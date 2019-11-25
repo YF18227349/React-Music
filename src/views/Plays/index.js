@@ -18,7 +18,7 @@ export default class Plays extends Component {
                 C_pos: 6, //C位
                 offset: 0, //滚动距离（应等于行高） //歌词数组{t:时间,c:歌词}
             },
-            isPaused:true,
+            isPaused:false,
             pValue:0,
         }
     }
@@ -34,6 +34,9 @@ export default class Plays extends Component {
             console.log(res)
             this.setState({
                 songsrc:res.data
+            },() => {
+                this.refs.musicAudio.play()
+                this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
             })
         })
         //songid为歌词id
@@ -42,11 +45,12 @@ export default class Plays extends Component {
             let lyric = res.data.data.lyric  
             this.createLrcObj(lyric);
             console.log(lyric)
+
         })   
 
-        this.playtimer = setInterval(() => {
-            this.timeUpdate();
-        }, 500  );
+        // this.playtimer = setInterval(() => {
+        //     this.timeUpdate();
+        // }, 1000  );
     }
   
     createLrcObj(lrc) {
@@ -90,6 +94,10 @@ export default class Plays extends Component {
             oLRC
         })
     }
+    componentWillUnmount() {
+        clearInterval(this.playtimer)
+        this.playtimer = null;
+    }
     //音频进度改变触发事件
     timeUpdate(){
         var musicAudio = this.refs.musicAudio
@@ -121,9 +129,11 @@ export default class Plays extends Component {
           })
           if(musicAudio.paused) {                 
             musicAudio.play();//播放  
-            this.playtimer = setInterval(() => { this.timeUpdate()}, 500  );
+            this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
           }else{
             musicAudio.pause();//暂停
+            clearInterval(this.playtimer)
+            this.playtimer = null;
           }
         } 
     }
@@ -136,7 +146,7 @@ export default class Plays extends Component {
         let { oLRC, currentId, isPaused } = this.state;
         const lyrics = this.state.oLRC.ms.map((item,index)=>{
             return (
-               <li key={index} ref="li" className={currentId == index?'act':''}><p>{item.c}</p></li>
+               <p key={index} ref="li" className={currentId == index?'act':''}>{item.c}</p>
            )
         })
         return (
@@ -146,13 +156,13 @@ export default class Plays extends Component {
                    <h3>{oLRC.ti}</h3>
                 </div>
                 <div className="lyrics-box">
-                   <ul className="lyrics-panels" ref="ul" style={{transform:'translateY(-' + currentId * 40 + 'px)'}}>{lyrics}
+                   <div className="lyrics-panels" ref="ul" style={{transform:'translateY(-' + currentId * 44 + 'px)'}}>{lyrics}
                     {lyrics}
-                   </ul>
+                   </div>
                 </div>
                 <div className="control">
                     <div className="control-btn">
-                        <audio src={this.state.songsrc} controls="controls" ref="musicAudio" preload="true" hidden autoPlay></audio>
+                        <audio src={this.state.songsrc} controls="controls" ref="musicAudio" preload="true" hidden ></audio>
                         <div className="icont-box">
                             <div>MV</div>
                             <div><Icon type="step-backward" /></div>

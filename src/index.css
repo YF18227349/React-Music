@@ -291,7 +291,9 @@
 }
 .lyrics-panels{
   color: #678e95;
-  line-height: 30px;
+  transform: translateY()
+
+
 }
 .lyrics-panels .act{
   color: #00e09e;
