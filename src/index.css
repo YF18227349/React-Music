@@ -288,15 +288,16 @@
   text-align: center;
   overflow-y: hidden;
   flex: 1;
+  position: relative;
 }
 .lyrics-panels{
+  width: 100%;
   color: #678e95;
-  transform: translateY()
-
-
+  position: absolute;
+  text-align: center;
 }
 .lyrics-panels .act{
   color: #00e09e;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
 }

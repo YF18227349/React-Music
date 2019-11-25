@@ -35,8 +35,8 @@ export default class Plays extends Component {
             this.setState({
                 songsrc:res.data
             },() => {
-                this.refs.musicAudio.play()
-                this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
+                // this.refs.musicAudio.play()
+                // this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
             })
         })
         //songid为歌词id
@@ -45,12 +45,7 @@ export default class Plays extends Component {
             let lyric = res.data.data.lyric  
             this.createLrcObj(lyric);
             console.log(lyric)
-
         })   
-
-        // this.playtimer = setInterval(() => {
-        //     this.timeUpdate();
-        // }, 1000  );
     }
   
     createLrcObj(lrc) {
@@ -156,7 +151,7 @@ export default class Plays extends Component {
                    <h3>{oLRC.ti}</h3>
                 </div>
                 <div className="lyrics-box">
-                   <div className="lyrics-panels" ref="ul" style={{transform:'translateY(-' + currentId * 44 + 'px)'}}>{lyrics}
+                   <div className="lyrics-panels" ref="ul" style={{top:- currentId * 35 + 150 +  'px'}}>
                     {lyrics}
                    </div>
                 </div>
