@@ -1,188 +1,233 @@
 import React, { Component } from 'react'
-import { Button, Icon } from "antd"
-import { play,lyric } from "../../common/API"
+import { Button, Icon } from 'antd'
+import {play, lyric} from '../../common/API'
 export default class Plays extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            songsrc:"",
-            currentTime:0,
-            currentId:-1,
-            oLRC:{
-                ti: "", //歌曲名
-                ar: "", //演唱者
-                al: "", //专辑名
-                by: "", //歌词制作人
-                ms: [],//歌词以及时间
-                lineNo: 0, //当前行
-                C_pos: 6, //C位
-                offset: 0, //滚动距离（应等于行高） //歌词数组{t:时间,c:歌词}
-            },
+            url: "",
+            lyric: "",
+            el: "",
+            lyricArr: [],
+            i: "",
+            time: 0,
             isPaused:false,
-            pValue:0,
-            biaoti:""
+            duration: "",
+            currentTime: "",
+            left: ""
         }
-    }
-    componentWillUnmount(){   
-        this.setState = (state)=>{ 
-          return;
-        }; 
-        clearInterval(this.playtimer)
-        this.playtimer = null; 
-        clearInterval(this.timer)
-        this.timer = null;
+        this.getLyric = this.getLyric.bind(this)
+        this.getUrl = this.getUrl.bind(this)
+        this.renderLyric = this.renderLyric.bind(this)
+        this.interval = this.interval.bind(this)
     }
     componentDidMount() {
-        //mid为歌曲id
-        let mid = this.props.location.state.mid
-        this.$http.get(play,{params:{mid}}).then(res=>{
+        this.getUrl();
+        this.getLyric();
+    }
+    format(second) {
+        second = parseInt(second)
+        var mintule = Math.floor(second / 60) >= 10 ? Math.floor(second / 60) : "0" + Math.floor(second / 60)
+        var sec = second % 60 >= 10 ? second % 60 : "0" + second % 60
+        return mintule + ":"+ sec
+    }
+    getUrl() {
+        const mid = this.props.location.state.mid;
+        console.log(mid)
+        this.$http.get(play, {params: {
+            mid
+        }}).then(res => {
             console.log(res)
             this.setState({
-                songsrc:res.data
-            },() => {
-                // this.refs.musicAudio.play()
-                // this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
-               
+                url: res.data,
+            })
+            const audio = this.refs.audio;
+            const progressBox = this.refs.progressBox;
+            const truth = this.refs.truth;
+            const circle = this.refs.circle
+            audio.oncanplaythrough = () => {
+                var duration = audio.duration;
+                this.setState({
+                    duration: this.format(duration)
+                })
+            }
+            audio.ontimeupdate = () => {
+                const currentTime = audio.currentTime;
+                this.setState({
+                    currentTime:this.format(currentTime)
+                })
+                const boxWidth = progressBox.clientWidth;
+                const scale = currentTime / audio.duration;
+                const width = boxWidth * scale;
+                truth.style.width = width + "px"
+                circle.style.left = width - 2 + 'px'
+            }
+        })
+    }
+    getLyric() {
+        const songid = this.props.location.state.songid
+        this.$http.get(lyric, {
+            params: {
+                songid
+            }
+        }).then(res => {
+            console.log(res)
+            this.setState({
+                lyric: res.data.data.lyric
+            })
+            let lyric = res.data.data.lyric;
+            let lyricArr = lyric.split("[换行]").slice(5);
+            console.log(lyricArr)
+            let arr = []
+            lyricArr.forEach((item, index) => {
+                let lstr = item.split(']')[1];
+                let ltime = item.split(']')[0].slice(1, 6)
+                function ltimeFormat(ltime) {
+                    let arr = ltime.split(":")
+                    return arr[0]*60 + parseInt(arr[1])
+                }
+                let obj = {
+                    lstr,
+                    ltime: ltimeFormat(ltime)
+                }
+                arr.push(obj)
+            })
+            console.log(arr)
+            this.setState({
+                lyricArr: arr
+            }, () => {
+                this.renderLyric()
             })
         })
-        //songid为歌词id
-        let songid = this.props.location.state.songid
-        this.$http.get(lyric,{params:{songid}}).then(res=>{
-            let lyric = res.data.data.lyric  
-            this.createLrcObj(lyric);
-            console.log(lyric)
-        })  
-        
-       
     }
-  
-    createLrcObj(lrc) {
-        let oLRC = this.state.oLRC
-        if(lrc.length==0) return;
-        var lrcs = lrc.split('[换行]');//用"[换行]"拆分成数组
-        console.log(lrcs)
-        for(var i in lrcs) {//遍历歌词数组
-            lrcs[i] = lrcs[i].replace(/(^\s*)|(\s*$)/g, ""); //去除前后空格
-            var t = lrcs[i].substring(lrcs[i].indexOf("[") + 1, lrcs[i].indexOf("]"));//取[]间的内容
-            var s = t.split(":");//分离:前后文字
-            // console.log(s)
-            if(isNaN(parseInt(s[0]))) { //不是数值
-                for (var i in oLRC) {
-                    if (i != "ms" && i == s[0].toLowerCase()) {
-                        oLRC[i] = s[1];
-                    }
-                }
-            }else { //是数值
-                var arr = lrcs[i].match(/\[(\d+:.+?)\]/g);//提取时间字段，可能有多个
-                var start = 0;
-                for(var k in arr){
-                    start += arr[k].length; //计算歌词位置
-                }
-                var content = lrcs[i].substring(start);//获取歌词内容
-                // console.log(content)
-                for (var k in arr){
-                    var t = arr[k].substring(1, arr[k].length-1);//取[]间的内容
-                    var s = t.split(":");//分离:前后文字
-                    oLRC.ms.push({//对象{t:时间,c:歌词}加入ms数组
-                        t: (parseFloat(s[0])*60+parseFloat(s[1])).toFixed(3),
-                        c: content
-                    });
-                }
-            }
-        }
-        oLRC.ms.sort(function (a, b) {//按时间顺序排序
-            return a.t-b.t;
-        });
-        console.log(oLRC.ti)
+    renderLyric() {
+        const el = this.state.lyricArr.map((item, index) => {
+            return <p key={index} className={["lyric-item", this.state.i == index ? "act" : ""].join(" ")}>{item.lstr}</p>
+        })
         this.setState({
-            oLRC,
-            biaoti:oLRC.ti
+            el
         })
     }
-    //音频进度改变触发事件
-    timeUpdate(){
-        var musicAudio = this.refs.musicAudio
-        let pValue = musicAudio.currentTime / (musicAudio.duration/100);
-        this.setState({pValue:pValue})
-        console.log(pValue)
-        this.lyrScroll()
+    interval() {
+        console.log(111)
+        var t = this.state.time
+        this.timer = setInterval(() => {
+            this.state.lyricArr.forEach((item, index) => {
+                if (t == item.ltime) {
+                    console.log(index)
+                    this.setState({
+                        i: index
+                    },() => {
+                        this.renderLyric()
+                        const box = this.refs.box;
+                        box.style.top = - index * 35 + 220 +  'px'
+                    })
+                }
+            })
+            t++;
+            this.setState({
+                time: t
+            })
+        }, 1000)
     }
-    //歌词面板事件
-    lyrScroll() {
-        var musicAudio = this.refs.musicAudio
-        let lyrArry = []
-        this.state.oLRC.ms.map(function (lyr,i) {
-            lyrArry.push(lyr.t)
-        })
-        lyrArry.forEach((item,index)=>{
-            if (musicAudio.currentTime > Number(item)) {
-                this.setState({ currentId: index})
-            }
+    move(e) {
+        this.refs.audio.pause()
+        let left = e.touches[0].pageX - 50;
+        if(left < 0) {
+            left = 0;
+        } else if(left > this.refs.progressBox.clientWidth) {
+            left = this.refs.progressBox.clientWidth
+        }
+        this.refs.circle.style.left = left - 2 + "px"
+        this.refs.truth.style.width = left + "px"
+        this.setState({
+            left
         })
     }
-    play() {    
-        var musicAudio = this.refs.musicAudio              
-        if(musicAudio!==null){             
-          //检测播放是否已暂停audio.paused在播放器播放时返回false.
-          console.log(musicAudio.paused)
-          this.setState({
-            isPaused:musicAudio.paused
-          })
-          if(musicAudio.paused) {                 
-            musicAudio.play();//播放  
-            this.playtimer = setInterval(() => { this.timeUpdate()}, 1000  );
+    touchend(){
+        this.refs.audio.play()
+        let scale = this.state.left / this.refs.progressBox.clientWidth;
+        let currentTime = this.refs.audio.duration * scale;
+        this.refs.audio.currentTime = currentTime;
+        this.setState({
+            currentTime:this.format(currentTime)
+        })
 
-            this.timer = setInterval(()=>{
-                let first = this.state.biaoti.substring(0,1)
-                let end = this.state.biaoti.substring(1)
-                this.setState({
-                   
-                    biaoti:end + first
-                   
-                })
-            },1000) 
-          }else{
-            musicAudio.pause();//暂停
-            clearInterval(this.playtimer)
-            this.playtimer = null;
-          }
-        } 
+        let i = this.state.lyricArr.findIndex(item => {
+            return item.ltime > currentTime
+        })
+        this.setState({
+            i,
+            time:this.state.lyricArr[i].ltime
+        },() => {
+            this.renderLyric()
+            let box = this.refs.box;
+            box.style.top = - i * 35 + 220 +  'px';
+            clearInterval(this.timer)
+            this.timer = null;
+            this.interval()
+        })
     }
-    //下一首
+    play() {
+        const audio = this.refs.audio;
+        if (audio.paused) {
+            audio.play()
+            this.interval()
+            this.setState({
+                isPaused:true
+            })
+        } else {
+            audio.pause()
+            this.setState({
+                isPaused:false
+            })
+            clearInterval(this.timer)
+            this.timer = null;
+        }
+    }
+    playPrev() {
+
+    }
     playNext() {
-        // console.log(this.state.oLRC)
-        // console.log(this.props.location.state.index++)
+        let index = this.props.location.state
+        console.log(index)
+        
+
+    }
+    componentWillUnmount() {
+        this.refs.audio.pause()
+        clearInterval(this.timer)
+        this.timer = null;
+        this.setState = () => {
+            return
+        }
     }
     render() {
-        let { oLRC, currentId, isPaused } = this.state;
-        const lyrics = this.state.oLRC.ms.map((item,index)=>{
-            return (
-               <p key={index} ref="li" className={currentId == index?'act':''}>{item.c}</p>
-           )
-        })
         return (
             <div className="container play">
-                <div className="title">
-                   <Icon className="down" type="down" />
-                   <h3>{this.state.biaoti}</h3>
-                </div>
-                <div className="lyrics-box">
-                   <div className="lyrics-panels" ref="ul" style={{top:- currentId * 35 + 200 +  'px'}}>
-                    {lyrics}
-                   </div>
-                </div>
-                <div className="control">
-                    <div className="control-btn">
-                        <audio src={this.state.songsrc} controls="controls" ref="musicAudio" preload="true" hidden ></audio>
-                        <div className="icont-box">
-                            <div>MV</div>
-                            <div><Icon type="step-backward" /></div>
-                            <Icon className="icont" type={isPaused ? 'pause-circle' :'play-circle'} onClick={()=>this.play()}></Icon>
-                            <div><Icon type="step-forward" onClick={()=>this.playNext()}/></div>
-                            <div><Icon type="heart" /></div>
-                        </div>
-                        <Button type="primary" style={{width:220,height:40,background:'#00e09e',border:"none"}} shape="round" size="large">下载歌曲</Button>
+                <div className="lyric-box">
+                    <div className="lyrics-panels" ref="box">
+                        {this.state.el}
                     </div>
+                </div>
+                <div className="progress-bar">
+                    <span>{this.state.currentTime}</span>
+                    <div className="progress-box" ref="progressBox">
+                        <div className="progress-truth" ref="truth"></div>
+                        <div className="circle" ref="circle" onTouchMove={this.move.bind(this)} onTouchEnd={this.touchend.bind(this)}></div>
+                    </div>
+                    <span>{this.state.duration}</span>
+                </div>
+                <div className="btns">
+                    <audio src={this.state.url} ref="audio"></audio>
+                    <div className="icont-box">
+                        <div>MV</div>
+                        <div><Icon type="step-backward" /></div>
+                        <Icon className="icont" type={this.state.isPaused ? 'pause-circle' :'play-circle'} onClick={()=>this.play()}></Icon>
+                        <div><Icon type="step-forward" onClick={()=>this.playNext()}/></div>
+                        <div><Icon type="heart" /></div> 
+                    </div>
+                    <Button type="primary" style={{width:220,height:40,background:'#00e09e',border:"none"}} shape="round" size="large">下载歌曲</Button>
                 </div>
             </div>
         )

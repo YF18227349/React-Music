@@ -15,7 +15,16 @@ export default class MapRoute extends Component {
                                 key={Item.path}
                                 path={Item.path}
                                 render={(props) => {
-                                    return <Item.component {...props} routes={Item.children}/>
+                                    return Item.auth ? (
+                                        localStorage.getItem("id") ? (
+                                            <Item.component {...props} routes={Item.children}/>
+                                        ) : (
+                                            <Redirect to="/login"/>
+                                        )
+
+                                    ) : (
+                                        <Item.component {...props} routes={Item.children}/>
+                                    )
                                 }}
                             />
                         ) : (

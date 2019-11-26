@@ -57,8 +57,8 @@ export default class TopList extends Component {
         })
     }
     //点击歌曲跳转播放页播放
-    play(songid,mid,index) {
-        this.props.history.push({pathname:"/play",state:{songid,mid,index}})
+    play(songid,mid,index,i) {
+        this.props.history.push({pathname:"/play",state:{songid,mid,index,i}})
     }
     renderList(start, end) {
         const el = this.state.data.songList.slice(start,end).map((item, index) => {
@@ -66,7 +66,7 @@ export default class TopList extends Component {
                 <li key={index}>
                 <div className="left">
                     <div className="subscript">{index+1}</div>
-                    <div className="songName" onClick={()=>{this.play(item.songId,item.songMid,index)}}>
+                    <div className="songName" onClick={()=>{this.play(item.songId,item.songMid,index,(this.state.songList))}}>
                         <p>{item.songName}</p>
                         <p>
                         {

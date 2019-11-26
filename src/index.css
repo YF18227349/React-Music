@@ -261,82 +261,90 @@
   }
 
 
-  /* 播放页 */
-  .play {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .play .title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-right: 50px;
-    height: 50px;
-
-  }
-  .play .title>.down{
-    width: 50px;
-  }
-  .play .title>h3 {
-    width: 100%;
-    flex: 1;
-    margin-bottom: 0;
-    font-size: 600;
-    text-align: center;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .play .control {
-    width: 100%;
-    text-align: center;
-  }
-  .play .control .control-btn {
-    height: 180px;
-    padding: 20px 25px;
-  }
-  .play .control .control-btn .icont-box{
-    display: flex;
-    justify-content: space-around;
-    height: 80px;
-    align-items: center;
-  }
-  .play .control .control-btn .icont {
-    font-size: 40px;
-  }
-  .play .control .control-btn .icont-box>div{
-    width: 40px;
-    height: 40px;
-    border: 3px solid #353535;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  
-
-
-/* 歌词面板 */
-.lyrics-box{
-  width: 90%;
-  margin: 6% 5% 4%;
-  text-align: center;
-  overflow-y: hidden;
-  flex: 1;
-  position: relative;
+ /* 播放页 */
+.play .lyric-box{
+width: 90%;
+height: 70%;
+margin: 6% 5% 4%;
+text-align: center;
+overflow: hidden;
+flex: 1;
+position: relative;
 }
 .lyrics-panels{
-  width: 100%;
-  color: #678e95;
-  position: absolute;
-  text-align: center;
+width: 100%;
+color: #678e95;
+position: absolute;
+text-align: center;
 }
 .lyrics-panels .act{
-  color: #00e09e;
-  font-size: 16px;
-  font-weight: 500;
+color: #00e09e;
+font-size: 16px;
+font-weight: 500;
 }
+.play .lyric-box {
+  height: 500px;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+.play .btns {
+  width: 100%;
+  height: 150px;
+  text-align: center;
+}
+.play .btns .icont-box{
+  display: flex;
+  justify-content: space-around;
+  height: 80px;
+  align-items: center;
+  padding: 0 30px;
+}
+.play .btns .icont-box .icont {
+  font-size: 40px;
+}
+.play .btns .icont-box>div{
+  width: 40px;
+  height: 40px;
+  border: 3px solid #353535;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.play .progress-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+}
+.play .progress-bar span {
+  width: 50px;
+  text-align: center;
+  color: #678e95;
+  font-size: 14px;
+}
+.play .progress-bar .progress-box {
+  flex: 1;
+  height: 5px;
+  background-color: #ccc;
+  position: relative;
+}
+.play .progress-bar .progress-box .progress-truth {
+  width: 0;
+  background-color: #00e09e;
+  height: 5px;
+}
+.play .progress-bar .progress-box .circle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #00e09e;
+  left: -2px;
+  top: -2px;
+}
+  
